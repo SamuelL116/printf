@@ -17,7 +17,7 @@ return (0);
 }
 if (ch == -2 || contador == 1024)
 {
-write(1, buffer, contador);
+(1, buffer, contador);
 contador = 0;
 }
 if (ch != -1 && ch != -2)

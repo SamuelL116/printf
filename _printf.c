@@ -1,50 +1,53 @@
 #include "main.h"
 
 /**
- * _printf - prints formatted data to stdout
- * @format: string that contains the format to print
- * Return: number of characters written
+ * _printf - formatted output conversion and print data.
+ * @format: input string.
+ *
+ * Return: number of chars printed.
  */
-int _printf(char *format, ...)
+int _printf(const char *format, ...)
 {
-int written = 0, (*structype)(char *, va_list);
-char q[3];
-va_list pa;
+unsigned int i = 0, len = 0, ibuf = 0;
+va_list arguments;
+int (*function)(va_list, char *, unsigned int);
+char *buffer;
 
-if (format == NULL)
+va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
+if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
 return (-1);
-q[2] = '\0';
-va_start(pa, format);
-_putchar(-1);
-while (format[0])
+if (!format[i])
+return (0);
+for (i = 0; format && format[i]; i++)
 {
-if (format[0] == '%')
+if (format[i] == '%')
 {
-structype = driver(format);
-if (structype)
+if (format[i + 1] == '\0')
 {
-q[0] = '%';
-q[1] = format[1];
-written += structype(q, pa);
-}
-else if (format[1] != '\0')
-{
-written += _putchar('%');
-written += _putchar(format[1]);
+print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+return (-1);
 }
 else
 {
-written += _putchar('%');
-break;
-}
-format += 2;
+function = get_print_func(format, i + 1);
+if (function == NULL)
+{
+if (format[i + 1] == ' ' && !format[i + 2])
+return (-1);
+handl_buf(buffer, format[i], ibuf), len++, i--;
 }
 else
 {
-written += _putchar(format[0]);
-format++;
+len += function(arguments, buffer, ibuf);
+i += ev_print_func(format, i + 1);
 }
+} i++;
 }
-_putchar(-2);
-return (written);
+else
+handl_buf(buffer, format[i], ibuf), len++;
+for (ibuf = len; ibuf > 1024; ibuf -= 1024)
+			;
+}
+print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+return (len);
 }

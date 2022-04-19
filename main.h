@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,8 +18,8 @@
 
 typedef struct format
 {
-char *id;
-int (*f)();
+	char *id;
+	int (*f)();
 } convert_match;
 
 int printf_pointer(va_list val);

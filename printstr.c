@@ -1,19 +1,31 @@
 #include "main.h"
 
 /**
- * printstr- print str.
- * @pa: gtgtg
- * @format: format str.
- * Return: number str for print.
+ * get_precision - gets the precision from the format string
+ * @p: the format string
+ * @params: the parameters struct
+ * @ap: the argument pointer
+ *
+ * Return: new pointer
  */
-int printstr(char *format, va_list pa)
+char *get_precision(char *p, params_t *params, va_list ap)
 {
-	char *string = va_arg(pa, char *);
-	int contador;
-	(void)format;
+	int d = 0;
 
-	if (string == NULL)
-		string = "(null)";
-	contador = _puts(string);
-	return (contador);
+	if (*p != '.')
+		return (p);
+	p++;
+	if (*p == '*')
+	{
+		d = va_arg(ap, int);
+		p++;
+	}
+	else
+	{
+		while (_isdigit(*p))
+			d = d * 10 + (*p++ - '0');
+	}
+
+	params->precision = d;
+	return (p);
 }
